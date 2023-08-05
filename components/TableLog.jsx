@@ -121,6 +121,32 @@ const TableLog = () => {
           </tbody>
         </table>
       </div>
+      <div className="flex items-center justify-center md:justify-center mt-8">
+        {/* Tombol Previous */}
+        <button className="relative hover:bg-[#2ED4BF] hover:text-white  rounded-md ml-2 z-10 text-[#2ED4BF] inline-flex items-center border border-[#2ED4BF] px-4 py-2 text-sm font-semibold  focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2ED4BF]">
+          Previous
+        </button>
+        {/* Tombol halaman */}
+        <button className="relative text-white bg-[#2ED4BF] rounded-md ml-2 z-10 inline-flex items-center border border-[#2ED4BF] px-4 py-2 text-sm font-semibold  focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2ED4BF]">
+          1
+        </button>
+        <button className="relative text-[#2ED4BF] hover:bg-[#2ED4BF] hover:text-white rounded-md ml-2 z-10 inline-flex items-center border border-[#2ED4BF] px-4 py-2 text-sm font-semibold  focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2ED4BF]">
+          2
+        </button>
+        <button className="relative text-[#2ED4BF] hover:bg-[#2ED4BF] hover:text-white  rounded-md ml-2 z-10 inline-flex items-center border border-[#2ED4BF] px-4 py-2 text-sm font-semibold  focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2ED4BF]">
+          ...
+        </button>
+        <button className="relative text-[#2ED4BF] hover:bg-[#2ED4BF] hover:text-white  rounded-md ml-2 z-10 inline-flex items-center border border-[#2ED4BF] px-4 py-2 text-sm font-semibold  focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2ED4BF]">
+          6
+        </button>
+        <button className="relative text-[#2ED4BF] hover:bg-[#2ED4BF] hover:text-white  rounded-md ml-2 z-10 inline-flex items-center border border-[#2ED4BF] px-4 py-2 text-sm font-semibold  focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2ED4BF]">
+          7
+        </button>
+        {/* Tombol Next */}
+        <button className="relative hover:bg-[#2ED4BF] hover:text-white  rounded-md ml-2 z-10 text-[#2ED4BF] inline-flex items-center border border-[#2ED4BF] px-4 py-2 text-sm font-semibold  focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2ED4BF]">
+          Next
+        </button>
+      </div>
     </div>
   );
 };
