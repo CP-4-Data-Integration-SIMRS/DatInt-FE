@@ -1,4 +1,6 @@
+import FilterButton from "@/components/FilterButton";
 import Searchbar from "@/components/SearchBar";
+import TableLog from "@/components/TableLog";
 
 export default function Home() {
   return (
@@ -9,7 +11,9 @@ export default function Home() {
         </h1>
         <div className="mb-8 flex flex-row items-start sm:items-center px-6 sm:px-10">
           <Searchbar />
+          <FilterButton />
         </div>
+        <TableLog />
       </div>
     </main>
   );
