@@ -3,13 +3,13 @@ import { Search } from "react-feather";
 
 const Searchbar = () => {
   return (
-    <div className="w-full ">
-      <div className="absolute top-[96.5px] pl-6 py-3 px-4 text-darker-t duration-200 z-10 rounded-md">
-        <Search className="text-gray-400" />
+    <div className="w-full relative">
+      <div className="absolute top-[50%] transform translate-y-[-50%] left-4 text-gray-400">
+        <Search className="h-5 w-5" />
       </div>
       <input
         type="text"
-        className="w-full sm:flex-1 px-4 py-2 pl-14 placeholder-gray-400 bg-[#fff] rounded-full font-medium border border-gray-400 focus:outline-none focus:ring-[#2ED4BF] text-gray-950 focus:border-[#2ED4BF]"
+        className="w-full sm:flex-1 px-12 py-2 placeholder-gray-400 bg-[#fff] rounded-full font-medium border border-gray-400 focus:outline-none focus:ring-[#2ED4BF] text-gray-950 focus:border-[#2ED4BF]"
         placeholder="Search..."
       />
     </div>
