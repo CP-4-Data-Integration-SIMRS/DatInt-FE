@@ -5,19 +5,17 @@ import Searchbar from "@/components/SearchBar";
 
 const MonitoringPage = () => {
   return (
-    <div className="h-screen bg-white">
-      <Navbar />
+    <div className="h-screen bg-[#fff] rounded-md drop-shadow-lg ">
+      {/* <Navbar /> */}
       <h1 className="px-6 pt-10 text-3xl font-bold ml-[1.8rem] sm:ml-[2.8rem] mb-6 text-[#333543]">
-        CDC <span className="text-teal-400">Monitoring</span>
+        CDC <span className="text-[#2ED4BF]">Monitoring</span>
       </h1>
       <div className="w-full flex justify-end">
-        <div className="w-84 px-8">
+        <div className="w-84 px-10">
           <Searchbar />
         </div>
       </div>
-      <div>
-        <TableData />
-      </div>
+      <TableData />
     </div>
   );
 };

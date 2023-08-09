@@ -57,6 +57,15 @@ const TableLog = () => {
       createdAt: "25/05/23 09:30:00",
       status: "Failed",
     },
+    {
+      dateTime: "21/07/2023, 21:06PM",
+      healthcare: "RS Edelweiss",
+      dbName: "database6",
+      tableName: "data_patient",
+      recordId: "1764",
+      createdAt: "25/05/23 09:30:00",
+      status: "Failed",
+    },
   ];
 
   return (
