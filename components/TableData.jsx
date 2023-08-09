@@ -65,7 +65,7 @@ const TableData = () => {
 
   return (
     <div>
-      <div className="px-10 pb-6 pt-4 relative overflow-x-auto overflow-y-auto min-h-[20rem]">
+      <div className="px-10 pb-6 mt-6 relative overflow-x-auto overflow-y-auto min-h-[20rem]">
         <table
           className="w-full my-5 border-collapse table-auto text-center text-gray-800 rounded-lg"
           id="table-data"
@@ -93,13 +93,12 @@ const TableData = () => {
             {data.map((item, index) => (
               <tr
                 key={index}
-                className="bg-[#fff] border-b border-gray-300 font-medium text-gray-900 whitespace-nowrap"
+                className="bg-[#fff] border-b border-gray-300 font-medium text-[#333543] whitespace-nowrap"
               >
                 <td className="px-4 py-3">{item.tableName}</td>
                 <td className="px-4 py-3">{item.totalRecord}</td>
                 <td className="px-4 py-3">{item.newData}</td>
                 <td className="px-4 py-3">{item.deltaData}</td>
-                {/* <td className="px-4 py-3">{item.progressCapt}</td> */}
                 <td className="px-10 py-3">
                   <ProgressBar progress={parseFloat(item.progressCapt)} />
                 </td>

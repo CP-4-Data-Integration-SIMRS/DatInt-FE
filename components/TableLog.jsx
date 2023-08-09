@@ -70,7 +70,7 @@ const TableLog = () => {
 
   return (
     <div>
-      <div className="relative overflow-x-auto overflow-y-auto min-h-[20rem]">
+      <div className="px-10 pb-6 mt-6 relative overflow-x-auto overflow-y-auto min-h-[20rem]">
         <table
           className="w-full border-collapse table-auto  text-left text-gray-800 rounded-lg"
           id="data-table"
@@ -130,7 +130,7 @@ const TableLog = () => {
           </tbody>
         </table>
       </div>
-      <div className="flex items-center justify-center md:justify-center mt-8">
+      <div className="flex items-center justify-center md:justify-center mt-[1.4rem]">
         {/* Tombol Previous */}
         <button className="relative hover:bg-[#2ED4BF] hover:text-white  rounded-md ml-2 z-10 text-[#2ED4BF] inline-flex items-center border border-[#2ED4BF] px-4 py-2 text-sm font-semibold  focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2ED4BF]">
           Previous
