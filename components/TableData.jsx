@@ -1,68 +1,7 @@
 import { useState, useEffect } from "react";
 import ProgressBar from "./ProgressBar";
 
-const TableData = () => {
-  const data = [
-    {
-      tableName: "data_patient",
-      totalRecord: "10000",
-      newData: "4000",
-      deltaData: "4000",
-      progressCapt: "75%",
-    },
-    {
-      tableName: "data_patient",
-      totalRecord: "4000",
-      newData: "4000",
-      deltaData: "4000",
-      progressCapt: "90%",
-    },
-    {
-      tableName: "data_patient",
-      totalRecord: "2500",
-      newData: "4000",
-      deltaData: "4000",
-      progressCapt: "25%",
-    },
-    {
-      tableName: "data_patient",
-      totalRecord: "5000",
-      newData: "8000",
-      deltaData: "8000",
-      progressCapt: "50%",
-    },
-    {
-      tableName: "data_patient",
-      totalRecord: "8000",
-      newData: "2500",
-      deltaData: "2500",
-      progressCapt: "70%",
-    },
-    {
-      tableName: "data_patient",
-      totalRecord: "4000",
-      newData: "600",
-      deltaData: "600",
-      progressCapt: "50%",
-    },
-  ];
-
-  const [progressData, setProgressData] = useState(data);
-
-  const simulateCapturing = () => {
-    setProgressData((prevData) =>
-      prevData.map((item) => {
-        const current = parseInt(item.newData);
-        const total = parseInt(item.totalRecord);
-        const progress = (current / total) * 100;
-        return {
-          ...item,
-          progressCapt: `${progress.toFixed(2)}%`,
-        };
-      })
-    );
-  };
-
+const TableData = ({ data }) => {
   return (
     <div>
       <div className="px-10 pb-6 mt-6 relative overflow-x-auto overflow-y-auto min-h-[20rem]">
