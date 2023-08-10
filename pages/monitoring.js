@@ -6,14 +6,24 @@ import axios from "axios";
 
 const MonitoringPage = () => {
   const [monitor, setMonitor] = useState([]);
+  const [filteredMonitor, setFilteredMonitor] = useState([]);
 
   const fetchMonitor = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/monitor");
       setMonitor(response.data);
+      setFilteredMonitor(response.data);
     } catch (err) {
       console.error("Error fetching data monitor:", err);
     }
+  };
+
+  const handleSearch = (event) => {
+    const searchTerm = event.target.value.toLowerCase();
+    const filtered = monitor.filter((monitors) =>
+      monitors.tableName.toLowerCase().includes(searchTerm)
+    );
+    setFilteredMonitor(filtered);
   };
 
   useEffect(() => {
@@ -26,10 +36,10 @@ const MonitoringPage = () => {
       </h1>
       <div className="w-full flex justify-center sm:justify-end">
         <div className="w-84 px-10">
-          <Searchbar />
+          <Searchbar handleSearch={handleSearch} />
         </div>
       </div>
-      <TableData className="flex-grow" data={monitor} />
+      <TableData className="flex-grow" data={filteredMonitor} />
     </div>
   );
 };

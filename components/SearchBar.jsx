@@ -2,8 +2,9 @@ import React from "react";
 import { useState } from "react";
 import { Search } from "react-feather";
 
-const Searchbar = () => {
+const Searchbar = ({ handleSearch }) => {
   const [isInputFocused, setIsInputFocused] = useState(false);
+
   return (
     <div className="w-full relative">
       <div className="absolute top-[50%] transform translate-y-[-50%] left-4 text-gray-400">
@@ -17,6 +18,7 @@ const Searchbar = () => {
         placeholder="Search..."
         onFocus={() => setIsInputFocused(true)}
         onBlur={() => setIsInputFocused(false)}
+        onInput={handleSearch}
       />
     </div>
   );
