@@ -7,6 +7,7 @@ import axios from "axios";
 export default function Home() {
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
+  const [activeFilter, setActiveFilter] = useState("All");
 
   const fetchLogs = async () => {
     try {
@@ -24,12 +25,19 @@ export default function Home() {
 
   const handleSearch = (event) => {
     const searchTerm = event.target.value.toLowerCase();
-    const filtered = logs.filter(
+    let filtered = logs;
+
+    if (activeFilter !== "All") {
+      filtered = logs.filter((log) => log.status === activeFilter);
+    }
+
+    filtered = filtered.filter(
       (log) =>
         log.healthcare.toLowerCase().includes(searchTerm) ||
         log.dbName.toLowerCase().includes(searchTerm) ||
         log.tableName.toLowerCase().includes(searchTerm)
     );
+
     setFilteredLogs(filtered);
   };
 
@@ -40,7 +48,11 @@ export default function Home() {
       </h1>
       <div className="mb-8 flex flex-row items-start sm:items-center px-6 sm:px-10">
         <Searchbar handleSearch={handleSearch} />
-        <FilterButton />
+        <FilterButton
+          setFilteredLogs={setFilteredLogs}
+          logs={logs}
+          setActiveFilter={setActiveFilter}
+        />
       </div>
       <TableLog data={filteredLogs} />
     </div>
