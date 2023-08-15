@@ -4,6 +4,7 @@ import Searchbar from "@/components/SearchBar";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Layout from "@/components/layout";
+import SideBar from "@/components/sidebar";
 
 const MonitoringPage = () => {
   const [monitor, setMonitor] = useState([]);
@@ -30,10 +31,21 @@ const MonitoringPage = () => {
   useEffect(() => {
     fetchMonitor();
   }, []);
+
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
   return (
-    <Layout>
-      <div className="min-h-screen bg-[#fff] rounded-md drop-shadow-lg flex flex-col px-10">
-        <h1 className="px-6 pt-10 text-3xl font-bold ml-[1.8rem] sm:ml-[2.8rem] mb-6 text-[#333543]">
+    <div className="min-h-screen bg-[#fff] rounded-md drop-shadow-lg flex">
+      <SideBar open={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      <main
+        className={`px-6 pb-6 pt-4 ${
+          isSidebarOpen ? "lg:ml-64" : "ml-0 pl-24"
+        } flex-grow`}
+      >
+        <h1 className="px-6 pt-10 text-3xl font-bold ml-[1.8rem] sm:ml-[2.8rem] mb-8 text-[#333543]">
           CDC <span className="text-[#2ED4BF]">Monitoring</span>
         </h1>
         <div className="w-full flex justify-center sm:justify-end">
@@ -42,8 +54,8 @@ const MonitoringPage = () => {
           </div>
         </div>
         <TableData className="flex-grow" data={filteredMonitor} />
-      </div>
-    </Layout>
+      </main>
+    </div>
   );
 };
 

@@ -1,46 +1,63 @@
 import Link from "next/link";
-import { useState } from "react"
+import { useRouter } from "next/router";
+import { useState } from "react";
 import { FileText, Menu, Monitor } from "react-feather";
 
-export default function SideBar() {
-    const [open, setOpen] = useState(true);
-    console.log(open);
-    const Menus = [
-        { title: "Log", icon : <FileText />, ref : '/' },
-        { title: "Monitoring", icon :  <Monitor />, ref : '/monitoring' },
-      ];
+export default function SideBar({ open, toggleSidebar }) {
+  const Menus = [
+    { title: "Logging", icon: <FileText />, ref: "/" },
+    { title: "Monitoring", icon: <Monitor />, ref: "/monitoring" },
+  ];
+  const router = useRouter();
 
-    return (
-        <div className={`${open ? 'w-72' : 'w-20'} bg-slate-800 p-5 duration-300 block`}>
-            <Menu 
-                className={`${open ? 'right-3 top-9 ' : ''} cursor-pointe w-7 bg-slate-50 hover:bg-teal-400 hover:text-white self-center rounded-md cursor-pointer`} 
-                onClick={() => setOpen(!open)}
+  return (
+    <aside
+      className={`fixed inset-y-0 left-0 z-[99] flex-shrink-0  px-5 py-6 bg-[#1e2739] text-white transform transition-all duration-300 ${
+        open ? "translate-x-0 w-64 " : " w-20 "
+      }`}
+    >
+      <div className="">
+        <button
+          className="p-2 text-white rounded-md hover:text-white focus:outline-none block "
+          onClick={toggleSidebar}
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M4 6h16M4 12h16M4 18h16"
             />
-
-            <ul className="pt-6">
-                {open ? Menus.map((menu, idx) => {
-                    return (
-                        <Link key={idx} href={`${menu.ref}`}>
-                            <li key={idx}
-                            className={`flex  rounded-md p-2 cursor-pointer hover:bg-slate-200 bg-slate-400 mb-2 hover:text-black text-[#fff] text-sm items-center gap-x-4 
-                                ${idx === 0 && "bg-light-white"}`}
-                            >
-                                {menu.icon}
-                                {menu.title}
-                            </li>
-                        </Link>
-                    )
-                }) : <>
-                        {Menus.map((menu, idx) => {
-                            return (
-                                <li key={idx} className="hover:bg-slate-200 rounded-md bg-slate-400 mb-2 p-2 hover:text-black text-[#fff] items-center">
-                                    <Link href={`${menu.ref}`}>{menu.icon}</Link>
-                                </li>
-                            )
-                        })}
-                    </>
-                }
-            </ul>
-        </div>
-    )
+          </svg>
+        </button>
+        <ul className="pt-6">
+          {Menus.map((menu, idx) => (
+            <li
+              key={idx}
+              className={
+                "mb-2 hover:text-white cursor-pointer px-3 py-3 rounded-md flex items-center" +
+                (router.pathname == `${menu.ref}`
+                  ? " bg-[#151b2b]"
+                  : " hover:bg-[#151b2b]")
+              }
+              onClick={() => router.push(`${menu.ref}`)}
+            >
+              <p className="w-6 h-6">{menu.icon}</p>
+              {open && (
+                <p className="text-white inline-block font-semibold text-sm ml-3">
+                  {menu.title}
+                </p>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </aside>
+  );
 }
