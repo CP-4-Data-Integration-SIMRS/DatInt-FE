@@ -3,6 +3,7 @@ import Searchbar from "@/components/SearchBar";
 import TableLog from "@/components/TableLog";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Layout from "@/components/layout";
 
 export default function Home() {
   const [logs, setLogs] = useState([]);
@@ -42,6 +43,7 @@ export default function Home() {
   };
 
   return (
+    <Layout>
     <div className="min-h-screen bg-[#fff] rounded-md drop-shadow-lg flex flex-col px-10 mt-1 py-10">
       <h1 className="text-3xl font-bold ml-[1.8rem] sm:ml-[2.8rem] mb-6 text-[#333543]">
         Activity Log
@@ -56,5 +58,6 @@ export default function Home() {
       </div>
       <TableLog data={filteredLogs} />
     </div>
+    </Layout>
   );
 }
