@@ -3,7 +3,6 @@ import Searchbar from "@/components/SearchBar";
 import TableLog from "@/components/TableLog";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Layout from "@/components/layout";
 import SideBar from "@/components/sidebar";
 
 export default function Home() {
