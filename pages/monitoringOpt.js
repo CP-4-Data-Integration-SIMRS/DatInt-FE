@@ -41,12 +41,12 @@ export default function Monitoring() {
         <div className='flex min-h-screen bg-[#fff]'>
             <SideBar open={isSidebarOpen} toggleSidebar={toggleSidebar} />
             <div className={` w-full h-full rounded-md p-6 ${
-                isSidebarOpen ? "lg:ml-64" : "ml-0 pl-24"}`}>
+                isSidebarOpen ? "lg:ml-64 md:ml-60 sm:ml-56" : "ml-0 pl-24"}`}>
                 <div className="flex justify-between">
                     <p className="text-3xl font-bold">FHIR  Adapter.</p>
                     <div className="flex">
-                        <p className="font-bold text-4xl">CDC</p>
-                        <p className="font-bold text-4xl text-title">Monitoring</p>
+                        <p className="font-bold text-3xl">CDC</p>
+                        <p className="font-bold text-3xl text-title">Monitoring</p>
                     </div>
                     {/* <p>Worker A</p> */}
                     <div className="flex justify-around items-center w-48 h-11 border-2 rounded-9 border-worker hover:bg-slate-100">
