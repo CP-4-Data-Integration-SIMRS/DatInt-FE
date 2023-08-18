@@ -8,12 +8,17 @@ import SideBar from "@/components/sidebar";
 const MonitoringPage = () => {
   const [monitor, setMonitor] = useState([]);
   const [filteredMonitor, setFilteredMonitor] = useState([]);
+  const [selectedDbname, setSelectedDbname] = useState("rs_mitra");
 
   const fetchMonitor = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/monitor");
       setMonitor(response.data);
-      setFilteredMonitor(response.data);
+
+      const filtered = response.data.filter(
+        (monitors) => monitors.dbname === selectedDbname
+      );
+      setFilteredMonitor(filtered);
     } catch (err) {
       console.error("Error fetching data monitor:", err);
     }
@@ -36,23 +41,45 @@ const MonitoringPage = () => {
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
+
+  const handleDbnameChange = (event) => {
+    setSelectedDbname(event.target.value);
+    const filtered = monitor.filter(
+      (monitors) => monitors.dbname === event.target.value
+    );
+    setFilteredMonitor(filtered);
+  };
   return (
-    <div className="min-h-screen bg-[#fff] rounded-md drop-shadow-lg flex">
+    <div>
       <SideBar open={isSidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`px-6 pb-6 pt-4 ${
-          isSidebarOpen ? "lg:ml-64" : "ml-0 pl-24"
-        } flex-grow`}
+        className={`px-6 pb-6 pt-4 ${isSidebarOpen ? "lg:ml-64" : "ml-20"}`}
       >
-        <h1 className="px-6 pt-10 text-3xl font-bold ml-[1.8rem] sm:ml-[2.8rem] mb-8 text-[#333543]">
-          CDC <span className="text-[#2ED4BF]">Monitoring</span>
-        </h1>
-        <div className="w-full flex justify-center sm:justify-end">
-          <div className="w-84 px-10">
-            <Searchbar handleSearch={handleSearch} />
+        <div className="flex flex-col">
+          <div className=" mt-3   bg-[#fff] min-h-screen  ">
+            <h1 className="px-6 pt-10 font-bold  sm:ml-[2.8rem] text-2xl sm:text-3xl  mb-8 text-[#333543]">
+              CDC <span className="text-[#2ED4BF]">Monitoring</span>
+            </h1>
+            <div className="w-full flex flex-col md:flex-row justify-center md:justify-between">
+              <div className="sm:w-84 sm:px-10 mb-6 sm:mb-0 flex items-center">
+                <select
+                  id="dbnameSelect"
+                  className=" px-5 w-full py-2 placeholder-gray-400 bg-[#fff] rounded-xl font-medium border border-gray-400 focus:outline-none focus:ring-[#2ED4BF] text-gray-950 focus:border-[#2ED4BF]"
+                  value={selectedDbname}
+                  onChange={handleDbnameChange}
+                >
+                  <option value="rs_mitra">RS Mitra</option>
+                  <option value="rs_edelweiss">RS Edelweiss</option>
+                  {/* Add other dbname options here */}
+                </select>
+              </div>
+              <div className="sm:w-84 sm:px-10">
+                <Searchbar handleSearch={handleSearch} />
+              </div>
+            </div>
+            <TableData className="flex-grow" data={filteredMonitor} />
           </div>
         </div>
-        <TableData className="flex-grow" data={filteredMonitor} />
       </main>
     </div>
   );

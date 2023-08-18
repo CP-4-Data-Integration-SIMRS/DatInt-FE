@@ -10,6 +10,7 @@ export default function Home() {
   const [filteredLogs, setFilteredLogs] = useState([]);
   const [activeFilter, setActiveFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchInput, setSearchInput] = useState("");
 
   const itemsPerPage = 5;
   const lastIndex = currentPage * itemsPerPage;
@@ -40,10 +41,21 @@ export default function Home() {
 
   const handleSearch = (event) => {
     const searchTerm = event.target.value.toLowerCase();
+    setSearchInput(searchTerm);
+    updateFilteredLogs(activeFilter, searchTerm);
+  };
+
+  const handleFilterChange = (newFilter) => {
+    setActiveFilter(newFilter);
+    setCurrentPage(1);
+    updateFilteredLogs(newFilter, searchInput);
+  };
+
+  const updateFilteredLogs = (filter, searchTerm) => {
     let filtered = logs;
 
-    if (activeFilter !== "All") {
-      filtered = logs.filter((log) => log.status === activeFilter);
+    if (filter !== "All") {
+      filtered = logs.filter((log) => log.status === filter);
     }
 
     filtered = filtered.filter(
@@ -54,7 +66,6 @@ export default function Home() {
     );
 
     setFilteredLogs(filtered);
-    setCurrentPage(1); // Reset page to the first page after search
   };
 
   const goToPage = (pageNumber) => {
@@ -62,30 +73,32 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fff] rounded-md drop-shadow-lg flex">
+    <div>
       <SideBar open={isSidebarOpen} toggleSidebar={toggleSidebar} />
       <main
-        className={`px-6 pb-6 pt-4 ${
-          isSidebarOpen ? "lg:ml-64" : "ml-0 pl-24"
-        } flex-grow`}
+        className={`px-6 pb-6 pt-4 ${isSidebarOpen ? "lg:ml-64" : "ml-20"}`}
       >
-        <h1 className="px-6 pt-10 text-3xl font-bold ml-[1.8rem] sm:ml-[2.8rem] mb-8 text-[#333543]">
-          Activity <span className="text-[#2ED4BF]">Log</span>
-        </h1>
-        <div className="mb-8 flex flex-row items-start sm:items-center px-6 sm:px-10">
-          <Searchbar handleSearch={handleSearch} />
-          <FilterButton
-            setFilteredLogs={setFilteredLogs}
-            logs={logs}
-            setActiveFilter={setActiveFilter}
-          />
+        <div className="flex flex-col">
+          <div className=" mt-3   bg-[#fff] min-h-screen ">
+            <h1 className="px-6 pt-10 text-3xl font-bold ml-[1.8rem] sm:ml-[2.8rem] mb-8 text-[#333543]">
+              Activity <span className="text-[#2ED4BF]">Log</span>
+            </h1>
+            <div className="mb-8 flex flex-row items-start sm:items-center px-6 sm:px-10">
+              <Searchbar handleSearch={handleSearch} />
+              <FilterButton
+                setFilteredLogs={setFilteredLogs}
+                logs={logs}
+                setActiveFilter={handleFilterChange}
+              />
+            </div>
+            <TableLog
+              data={currentLogs}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              goToPage={goToPage}
+            />
+          </div>
         </div>
-        <TableLog
-          data={currentLogs}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          goToPage={goToPage}
-        />
       </main>
     </div>
   );

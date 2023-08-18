@@ -29,20 +29,28 @@ const TableData = ({ data }) => {
             </tr>
           </thead>
           <tbody className="text-[13px] text-red-500 sm:text-[12px]">
-            {data.map((item, index) => (
-              <tr
-                key={index}
-                className="bg-[#fff] border-b border-gray-300 font-medium text-[#333543] whitespace-nowrap"
-              >
-                <td className="px-4 py-3">{item.tableName}</td>
-                <td className="px-4 py-3">{item.totalRecord}</td>
-                <td className="px-4 py-3">{item.newData}</td>
-                <td className="px-4 py-3">{item.deltaData}</td>
-                <td className="px-10 py-3">
-                  <ProgressBar progress={parseFloat(item.progressCapt)} />
-                </td>
-              </tr>
-            ))}
+            {data.map((db, dbIndex) =>
+              db.tableInfo.map((item, index) => (
+                <tr
+                  key={index}
+                  className="bg-[#fff] border-b border-gray-300 font-medium text-[#333543] whitespace-nowrap"
+                >
+                  <td className="px-4 py-3">{item.tableName}</td>
+
+                  {/* <td className="px-4 py-3">{item.tableName}</td> */}
+                  <td className="px-4 py-3">{item.totalRecord}</td>
+                  <td className="px-4 py-3">{item.newData}</td>
+                  <td className="px-4 py-3">{item.deltaData}</td>
+                  <td className="px-10 py-3">
+                    <ProgressBar
+                      progress={
+                        parseFloat(item.currentCaptured) / item.deltaData
+                      }
+                    />
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

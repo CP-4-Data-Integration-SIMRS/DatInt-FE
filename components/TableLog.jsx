@@ -2,6 +2,40 @@ import React from "react";
 import { useState } from "react";
 
 const TableLog = ({ data, currentPage, totalPages, goToPage }) => {
+  const generatePaginationButtons = () => {
+    const maxVisibleButtons = 5;
+    const buttons = [];
+
+    if (totalPages <= maxVisibleButtons) {
+      for (let i = 1; i <= totalPages; i++) {
+        buttons.push(i);
+      }
+    } else {
+      if (currentPage <= maxVisibleButtons - 2) {
+        for (let i = 1; i <= maxVisibleButtons - 2; i++) {
+          buttons.push(i);
+        }
+        buttons.push("...");
+        buttons.push(totalPages);
+      } else if (currentPage > totalPages - maxVisibleButtons + 2) {
+        buttons.push(1);
+        buttons.push("...");
+        for (let i = totalPages - maxVisibleButtons + 3; i <= totalPages; i++) {
+          buttons.push(i);
+        }
+      } else {
+        buttons.push(1);
+        buttons.push("...");
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          buttons.push(i);
+        }
+        buttons.push("...");
+        buttons.push(totalPages);
+      }
+    }
+
+    return buttons;
+  };
   return (
     <div>
       <div className="px-10 pb-6 mt-[2.7rem] relative overflow-x-auto overflow-y-auto min-h-[20rem]">
@@ -74,17 +108,21 @@ const TableLog = ({ data, currentPage, totalPages, goToPage }) => {
           </button>
         )}
 
-        {Array.from({ length: totalPages }).map((_, index) => (
+        {generatePaginationButtons().map((button, index) => (
           <button
             key={index}
-            onClick={() => goToPage(index + 1)}
+            onClick={() => {
+              if (typeof button === "number") {
+                goToPage(button);
+              }
+            }}
             className={`relative ${
               currentPage === index + 1
                 ? "text-white bg-[#2ED4BF] rounded-md ml-2 z-10"
                 : "text-[#2ED4BF] hover:bg-[#2ED4BF] hover:text-white rounded-md ml-2 z-10"
             } inline-flex items-center border border-[#2ED4BF] px-4 py-2 text-sm font-semibold  focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2ED4BF]`}
           >
-            {index + 1}
+            {button === "..." ? "..." : button}
           </button>
         ))}
 
