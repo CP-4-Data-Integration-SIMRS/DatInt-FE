@@ -9,6 +9,7 @@ const MonitoringPage = () => {
   const [monitor, setMonitor] = useState([]);
   const [filteredMonitor, setFilteredMonitor] = useState([]);
   const [selectedDbname, setSelectedDbname] = useState("rs_mitra");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchMonitor = async () => {
     try {
@@ -25,10 +26,19 @@ const MonitoringPage = () => {
   };
 
   const handleSearch = (event) => {
-    const searchTerm = event.target.value.toLowerCase();
-    const filtered = monitor.filter((monitors) =>
-      monitors.tableName.toLowerCase().includes(searchTerm)
-    );
+    const newSearchTerm = event.target.value.toLowerCase();
+    setSearchTerm(newSearchTerm); // Update the search term state
+
+    const filtered = monitor
+      .filter((item) => item.dbname === selectedDbname)
+      .map((item) => ({
+        ...item,
+        tableInfo: item.tableInfo.filter((table) =>
+          table.tableName.toLowerCase().includes(newSearchTerm)
+        ),
+      }))
+      .filter((item) => item.tableInfo.length > 0);
+
     setFilteredMonitor(filtered);
   };
 
@@ -43,10 +53,19 @@ const MonitoringPage = () => {
   };
 
   const handleDbnameChange = (event) => {
-    setSelectedDbname(event.target.value);
-    const filtered = monitor.filter(
-      (monitors) => monitors.dbname === event.target.value
-    );
+    const newSelectedDbname = event.target.value;
+    setSelectedDbname(newSelectedDbname);
+
+    const filtered = monitor
+      .filter((item) => item.dbname === newSelectedDbname)
+      .map((item) => ({
+        ...item,
+        tableInfo: item.tableInfo.filter(
+          (table) => table.tableName.toLowerCase().includes(searchTerm) // Using the searchTerm state here
+        ),
+      }))
+      .filter((item) => item.tableInfo.length > 0);
+
     setFilteredMonitor(filtered);
   };
   return (
