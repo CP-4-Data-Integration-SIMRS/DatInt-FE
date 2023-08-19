@@ -11,22 +11,29 @@ const TableLog = ({ data, currentPage, totalPages, goToPage }) => {
         buttons.push(i);
       }
     } else {
-      if (currentPage <= maxVisibleButtons - 2) {
-        for (let i = 1; i <= maxVisibleButtons - 2; i++) {
+      if (currentPage <= Math.ceil(maxVisibleButtons / 2)) {
+        for (let i = 1; i <= maxVisibleButtons - 1; i++) {
           buttons.push(i);
         }
         buttons.push("...");
         buttons.push(totalPages);
-      } else if (currentPage > totalPages - maxVisibleButtons + 2) {
+      } else if (
+        currentPage >=
+        totalPages - Math.floor(maxVisibleButtons / 2)
+      ) {
         buttons.push(1);
         buttons.push("...");
-        for (let i = totalPages - maxVisibleButtons + 3; i <= totalPages; i++) {
+        for (let i = totalPages - maxVisibleButtons + 2; i <= totalPages; i++) {
           buttons.push(i);
         }
       } else {
         buttons.push(1);
         buttons.push("...");
-        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+        for (
+          let i = currentPage - Math.floor(maxVisibleButtons / 2);
+          i <= currentPage + Math.floor(maxVisibleButtons / 2);
+          i++
+        ) {
           buttons.push(i);
         }
         buttons.push("...");
@@ -102,7 +109,7 @@ const TableLog = ({ data, currentPage, totalPages, goToPage }) => {
         {currentPage > 1 && (
           <button
             onClick={() => goToPage(currentPage - 1)}
-            className="relative hover:bg-[#2ED4BF] text-[#2ED4BF] hover:text-white rounded-md ml-2 z-10 inline-flex items-center border border-[#2ED4BF] px-4 py-2 text-sm font-semibold focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2ED4BF]"
+            className="relative hover:bg-[#2ED4BF] pagination-button text-[#2ED4BF] hover:text-white rounded-md ml-2 z-10 inline-flex items-center border border-[#2ED4BF] px-4 py-2 text-sm font-semibold focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2ED4BF]"
           >
             Previous
           </button>
@@ -117,7 +124,7 @@ const TableLog = ({ data, currentPage, totalPages, goToPage }) => {
               }
             }}
             className={`relative ${
-              currentPage === index + 1
+              currentPage === button // Compare with the actual page number
                 ? "text-white bg-[#2ED4BF] rounded-md ml-2 z-10"
                 : "text-[#2ED4BF] hover:bg-[#2ED4BF] hover:text-white rounded-md ml-2 z-10"
             } inline-flex items-center border border-[#2ED4BF] px-4 py-2 text-sm font-semibold  focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2ED4BF]`}

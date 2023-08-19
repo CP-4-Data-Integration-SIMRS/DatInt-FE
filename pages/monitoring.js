@@ -10,7 +10,22 @@ const MonitoringPage = () => {
   const [filteredMonitor, setFilteredMonitor] = useState([]);
   const [selectedDbname, setSelectedDbname] = useState("rs_mitra");
   const [searchTerm, setSearchTerm] = useState("");
+  const itemsPerPage = 3;
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentLogs = filteredMonitor
+    .flatMap((db) => db.tableInfo)
+    .slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(
+    filteredMonitor.flatMap((db) => db.tableInfo).length / itemsPerPage
+  );
+
+  const goToPage = (page) => {
+    setCurrentPage(page);
+  };
   const fetchMonitor = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/monitor");
@@ -28,6 +43,7 @@ const MonitoringPage = () => {
   const handleSearch = (event) => {
     const newSearchTerm = event.target.value.toLowerCase();
     setSearchTerm(newSearchTerm); // Update the search term state
+    setCurrentPage(1); // Reset the current page to 1 when performing a search
 
     const filtered = monitor
       .filter((item) => item.dbname === selectedDbname)
@@ -40,6 +56,10 @@ const MonitoringPage = () => {
       .filter((item) => item.tableInfo.length > 0);
 
     setFilteredMonitor(filtered);
+
+    if (filtered.length === 0) {
+      setCurrentPage(totalPages); // Set current page to the last page
+    }
   };
 
   useEffect(() => {
@@ -68,6 +88,14 @@ const MonitoringPage = () => {
 
     setFilteredMonitor(filtered);
   };
+
+  const dbNameOptions = monitor.map((monitors) => monitors.dbname);
+
+  // const goToPage = (pageNumber) => {
+
+  //   (pageNumber);
+  // };
+
   return (
     <div>
       <SideBar open={isSidebarOpen} toggleSidebar={toggleSidebar} />
@@ -87,16 +115,23 @@ const MonitoringPage = () => {
                   value={selectedDbname}
                   onChange={handleDbnameChange}
                 >
-                  <option value="rs_mitra">RS Mitra</option>
-                  <option value="rs_edelweiss">RS Edelweiss</option>
-                  {/* Add other dbname options here */}
+                  {dbNameOptions.map((dbName) => (
+                    <option key={dbName} value={dbName}>
+                      {dbName}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="sm:w-84 sm:px-10">
                 <Searchbar handleSearch={handleSearch} />
               </div>
             </div>
-            <TableData className="flex-grow" data={filteredMonitor} />
+            <TableData
+              data={currentLogs}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              goToPage={goToPage}
+            />
           </div>
         </div>
       </main>
