@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
-import ProgressBar from "./ProgressBar";
+import { useState, useEffect } from 'react';
+import React from 'react';
+import ProgressBar from './ProgressBar';
 
-const TableData = ({ data, currentPage, totalPages, goToPage }) => {
+const TableData = ({ data, currentPage, totalPages, goToPage, loading }) => {
   const generatePaginationButtons = () => {
     const maxVisibleButtons = 5;
     const buttons = [];
@@ -15,28 +16,21 @@ const TableData = ({ data, currentPage, totalPages, goToPage }) => {
         for (let i = 1; i <= maxVisibleButtons - 1; i++) {
           buttons.push(i);
         }
-        buttons.push("...");
+        buttons.push('...');
         buttons.push(totalPages);
-      } else if (
-        currentPage >=
-        totalPages - Math.floor(maxVisibleButtons / 2)
-      ) {
+      } else if (currentPage >= totalPages - Math.floor(maxVisibleButtons / 2)) {
         buttons.push(1);
-        buttons.push("...");
+        buttons.push('...');
         for (let i = totalPages - maxVisibleButtons + 2; i <= totalPages; i++) {
           buttons.push(i);
         }
       } else {
         buttons.push(1);
-        buttons.push("...");
-        for (
-          let i = currentPage - Math.floor(maxVisibleButtons / 2);
-          i <= currentPage + Math.floor(maxVisibleButtons / 2);
-          i++
-        ) {
+        buttons.push('...');
+        for (let i = currentPage - Math.floor(maxVisibleButtons / 2); i <= currentPage + Math.floor(maxVisibleButtons / 2); i++) {
           buttons.push(i);
         }
-        buttons.push("...");
+        buttons.push('...');
         buttons.push(totalPages);
       }
     }
@@ -47,13 +41,10 @@ const TableData = ({ data, currentPage, totalPages, goToPage }) => {
   return (
     <div>
       <div className="px-10 pb-6 mt-6 relative overflow-x-auto overflow-y-auto min-h-[20rem]">
-        <table
-          className="w-full my-5 border-collapse table-auto text-center text-gray-800 rounded-lg"
-          id="table-data"
-        >
+        <table className="w-full my-5 border-collapse table-auto text-left text-gray-800 rounded-lg" id="table-data">
           <thead className="text-[15.3px] text-[#333543] border-b border-t border-gray-300">
             <tr>
-              <th scope="col" className="px-4 py-2 min-w-[138px] lg:min-w-0">
+              <th scope="col" className="px-4 py-2 min-w-[150px] lg:min-w-0">
                 Table Name
               </th>
               <th scope="col" className="px-4 py-2 min-w-[138px] lg:min-w-0">
@@ -70,25 +61,26 @@ const TableData = ({ data, currentPage, totalPages, goToPage }) => {
               </th>
             </tr>
           </thead>
-          <tbody className="text-[13px] text-red-500 sm:text-[12px]">
-            {data.map((item, index) => (
-              <tr
-                key={index}
-                className="bg-[#fff] border-b border-gray-300 font-medium text-[#333543] whitespace-nowrap"
-              >
-                <td className="px-4 py-3">{item.tableName}</td>
-
-                {/* <td className="px-4 py-3">{item.tableName}</td> */}
-                <td className="px-4 py-3">{item.totalRecord}</td>
-                <td className="px-4 py-3">{item.newData}</td>
-                <td className="px-4 py-3">{item.deltaData}</td>
-                <td className="px-10 py-3">
-                  <ProgressBar
-                    progress={parseFloat(item.currentCaptured) / item.deltaData}
-                  />
+          <tbody className="text-[13px]  sm:text-[12px]">
+            {loading ? (
+              <tr>
+                <td colSpan="5" className="text-center py-3">
+                  Loading...
                 </td>
               </tr>
-            ))}
+            ) : (
+              data.map((table, index) => (
+                <tr key={index} className="bg-[#fff] border-b border-gray-300 font-medium text-[#333543] whitespace-nowrap">
+                  <td className="px-4 text-start py-3">{table.tableName}</td>
+                  <td className="px-4 py-3">{table.totalRecord}</td>
+                  <td className="px-4 py-3">{table.newData}</td>
+                  <td className="px-4 py-3">{table.deltaData}</td>
+                  <td className=" py-3">
+                    <ProgressBar progress={parseFloat(table.currentCapured) / 2} />
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
@@ -106,17 +98,17 @@ const TableData = ({ data, currentPage, totalPages, goToPage }) => {
           <button
             key={index}
             onClick={() => {
-              if (typeof button === "number") {
+              if (typeof button === 'number') {
                 goToPage(button);
               }
             }}
             className={`relative ${
               currentPage === button // Compare with the actual page number
-                ? "text-white bg-[#2ED4BF] rounded-md ml-2 z-10"
-                : "text-[#2ED4BF] hover:bg-[#2ED4BF] hover:text-white rounded-md ml-2 z-10"
+                ? 'text-white bg-[#2ED4BF] rounded-md ml-2 z-10'
+                : 'text-[#2ED4BF] hover:bg-[#2ED4BF] hover:text-white rounded-md ml-2 z-10'
             } inline-flex items-center border border-[#2ED4BF] px-4 py-2 text-sm font-semibold  focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2ED4BF]`}
           >
-            {button === "..." ? "..." : button}
+            {button === '...' ? '...' : button}
           </button>
         ))}
 
