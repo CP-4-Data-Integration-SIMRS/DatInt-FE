@@ -73,6 +73,7 @@ const MonitoringPage = () => {
       .filter((item) => item.tableInfo.length > 0);
 
     setFilteredMonitor(filtered);
+    setCurrentPage(1);
   };
 
   const dbNameOptions = monitor.map((monitor) => monitor.dbname);
