@@ -3,6 +3,7 @@ import axios from 'axios';
 import TableData from '@/components/TableData';
 import SideBar from '@/components/sidebar';
 import Searchbar from '@/components/SearchBar';
+import DropdownButton from '@/components/DropdownButton';
 
 const MonitoringPage = () => {
   const [selectedDbname, setSelectedDbname] = useState('rs_advent');
@@ -68,26 +69,12 @@ const MonitoringPage = () => {
       <main className={`px-6 pb-6 pt-4 ${isSidebarOpen ? 'lg:ml-64' : 'ml-20'}`}>
         <div className="flex flex-col">
           <div className=" mt-3   bg-[#fff] min-h-screen  ">
-            <h1 className="px-6 pt-10 font-bold  sm:ml-[2.8rem] text-2xl sm:text-3xl  mb-8 text-[#333543]">
+            <h1 className="px-6 pt-10 font-bold  sm:ml-[2.8rem] text-3xl  mb-8 text-[#333543]">
               CDC <span className="text-[#2ED4BF]">Monitoring</span>
             </h1>
             <div className="w-full flex flex-col md:flex-row justify-center md:justify-between">
-              <div className="sm:w-84 sm:px-10 mb-6 sm:mb-0 flex items-center">
-                <select
-                  id="dbnameSelect"
-                  className=" px-5 w-full py-2 placeholder-gray-400 bg-[#fff] rounded-xl font-medium border border-gray-400 focus:outline-none focus:ring-[#2ED4BF] text-gray-950 focus:border-[#2ED4BF]"
-                  value={selectedDbname}
-                  onChange={(event) => {
-                    setSelectedDbname(event.target.value);
-                    setCurrentPage(1);
-                  }}
-                >
-                  {databases.map((database, index) => (
-                    <option key={index} value={database}>
-                      {database}
-                    </option>
-                  ))}
-                </select>
+              <div className="sm:w-84 sm:px-10 mb-6 md:mb-0 flex items-center">
+                <DropdownButton databases={databases} selectedDbname={selectedDbname} setSelectedDbname={setSelectedDbname} setCurrentPage={setCurrentPage} />
               </div>
               <div className="sm:w-84 sm:px-10">
                 <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} setCurrentPage={setCurrentPage} />
