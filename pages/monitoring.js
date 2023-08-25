@@ -1,98 +1,66 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TableData from '@/components/TableData';
-import Searchbar from '@/components/SearchBar';
 import SideBar from '@/components/sidebar';
+import Searchbar from '@/components/SearchBar';
 
 const MonitoringPage = () => {
-  const [monitor, setMonitor] = useState([]);
-  const [filteredMonitor, setFilteredMonitor] = useState([]);
-  const [selectedDbname, setSelectedDbname] = useState('rs_mitra');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDbname, setSelectedDbname] = useState('rs_advent');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const [databases, setDatabases] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredMonitor, setFilteredMonitor] = useState([]);
 
   const fetchMonitor = async () => {
     try {
       setIsLoading(true);
-      const requestConfig = {
-        method: 'get',
-        url: 'http://localhost:3030/api/v1/monitor',
-        headers: {
-          'Accept-Encoding': 'gzip',
-        },
-      };
-      const response = await axios(requestConfig);
+      const response = await axios.get('https://simrs-cdc-monitoring-production.up.railway.app/api/v1/monitor', {
+        params: { dbname: selectedDbname },
+      });
       const responseData = response.data.data;
 
-      setMonitor(responseData);
-
-      const filtered = responseData.filter((monitors) => monitors.dbname === selectedDbname);
-      setFilteredMonitor(filtered);
+      setFilteredMonitor(responseData.tableInfo);
     } catch (err) {
       console.error('Error fetching data monitor:', err);
     } finally {
       setIsLoading(false);
     }
   };
+
   useEffect(() => {
     fetchMonitor();
+  }, [selectedDbname, searchTerm]);
+
+  useEffect(() => {
+    axios
+      .get('https://simrs-cdc-monitoring-production.up.railway.app/api/v1/monitor')
+      .then((response) => {
+        setDatabases(response.data.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
   }, []);
-
-  const handleSearch = (event) => {
-    const newSearchTerm = event.target.value.toLowerCase();
-    setSearchTerm(newSearchTerm);
-    setCurrentPage(1);
-
-    const filtered = monitor
-      .filter((item) => item.dbname === selectedDbname)
-      .map((item) => ({
-        ...item,
-        tableInfo: item.tableInfo.filter((table) => table.tableName.toLowerCase().includes(newSearchTerm)),
-      }))
-      .filter((item) => item.tableInfo.length > 0);
-
-    setFilteredMonitor(filtered);
-
-    if (filtered.length === 0) {
-      setCurrentPage(1);
-    }
-  };
-
-  const handleDbnameChange = (event) => {
-    const newSelectedDbname = event.target.value;
-    setSelectedDbname(newSelectedDbname);
-
-    const filtered = monitor
-      .filter((item) => item.dbname === newSelectedDbname)
-      .map((item) => ({
-        ...item,
-        tableInfo: item.tableInfo.filter((table) => table.tableName.toLowerCase().includes(searchTerm)),
-      }))
-      .filter((item) => item.tableInfo.length > 0);
-
-    setFilteredMonitor(filtered);
-    setCurrentPage(1);
-  };
-
-  const dbNameOptions = monitor.map((monitor) => monitor.dbname);
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentLogs = filteredMonitor.flatMap((db) => db.tableInfo).slice(indexOfFirstItem, indexOfLastItem);
-
-  const totalPages = Math.ceil(filteredMonitor.flatMap((db) => db.tableInfo).length / itemsPerPage);
 
   const goToPage = (page) => {
     setCurrentPage(page);
   };
 
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
-
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  // const filteredLogs = filteredMonitor.filter((log) => {
+  //   return log.tableName.toLowerCase().includes(searchTerm.toLowerCase());
+  // });
+
+  const currentLogs = filteredMonitor.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredMonitor.length / itemsPerPage);
 
   return (
     <div>
@@ -109,17 +77,20 @@ const MonitoringPage = () => {
                   id="dbnameSelect"
                   className=" px-5 w-full py-2 placeholder-gray-400 bg-[#fff] rounded-xl font-medium border border-gray-400 focus:outline-none focus:ring-[#2ED4BF] text-gray-950 focus:border-[#2ED4BF]"
                   value={selectedDbname}
-                  onChange={handleDbnameChange}
+                  onChange={(event) => {
+                    setSelectedDbname(event.target.value);
+                    setCurrentPage(1);
+                  }}
                 >
-                  {dbNameOptions.map((dbName) => (
-                    <option key={dbName} value={dbName}>
-                      {dbName}
+                  {databases.map((database, index) => (
+                    <option key={index} value={database}>
+                      {database}
                     </option>
                   ))}
                 </select>
               </div>
               <div className="sm:w-84 sm:px-10">
-                <Searchbar handleSearch={handleSearch} />
+                <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} setCurrentPage={setCurrentPage} />
               </div>
             </div>
             <TableData data={currentLogs} loading={isLoading} currentPage={currentPage} totalPages={totalPages} goToPage={goToPage} />

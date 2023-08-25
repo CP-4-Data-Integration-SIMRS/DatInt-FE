@@ -1,16 +1,14 @@
-import React from "react";
-import { useState } from "react";
-import { Search } from "react-feather";
+import React from 'react';
+import { useState } from 'react';
+import { Search } from 'react-feather';
 
-const Searchbar = ({ handleSearch }) => {
+const Searchbar = ({ searchTerm, setSearchTerm, setCurrentPage }) => {
   const [isInputFocused, setIsInputFocused] = useState(false);
 
   return (
     <div className="w-full relative">
       <div className="absolute top-[50%] transform translate-y-[-50%] left-4 text-gray-400">
-        <Search
-          className={`h-5 w-5 ${isInputFocused ? "text-[#2ED4BF]" : ""}`}
-        />
+        <Search className={`h-5 w-5 ${isInputFocused ? 'text-[#2ED4BF]' : ''}`} />
       </div>
       <input
         type="text"
@@ -18,7 +16,11 @@ const Searchbar = ({ handleSearch }) => {
         placeholder="Search..."
         onFocus={() => setIsInputFocused(true)}
         onBlur={() => setIsInputFocused(false)}
-        onInput={handleSearch}
+        value={searchTerm}
+        onChange={(event) => {
+          setSearchTerm(event.target.value);
+          setCurrentPage(1);
+        }}
       />
     </div>
   );

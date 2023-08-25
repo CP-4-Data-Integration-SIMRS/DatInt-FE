@@ -4,72 +4,51 @@ import TableLog from '@/components/TableLog';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import SideBar from '@/components/sidebar';
+import Searchbar from '@/components/SearchBar';
 
 export default function Home() {
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
-
-  const [activeFilter, setActiveFilter] = useState('All');
+  const [activeFilter, setActiveFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchInput, setSearchInput] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [isSidebarOpen, setSidebarOpen] = useState(true);
-
+  const [debounceTimeout, setDebounceTimeout] = useState(null);
   const itemsPerPage = 10;
 
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    setIsLoading(true);
+  const fetchLogs = async () => {
+    try {
+      setIsLoading(true);
+      const encodedSearchTerm = encodeURIComponent(searchTerm);
 
-    const axiosConfig = {
-      url: 'http://localhost:3030/api/v1/logs',
-      method: 'get',
-      headers: {
-        'Accept-Encoding': 'gzip',
-      },
-    };
-
-    axios
-      .request(axiosConfig)
-      .then((response) => {
-        setLogs(response.data.data);
-        setFilteredLogs(response.data.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching logs:', error);
-      })
-      .finally(() => {
-        setIsLoading(false);
+      const response = await axios.get('http://localhost:3030/api/v1/logs', {
+        params: { Search: encodedSearchTerm, Filter: activeFilter },
       });
-  }, []);
+      setLogs(response.data.data);
+      setFilteredLogs(response.data.data);
+    } catch (err) {
+      console.error('Error fetching data monitor:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (debounceTimeout) {
+      clearTimeout(debounceTimeout);
+    }
+    console.log('Debounce started');
+    const newDebounceTimeout = setTimeout(() => {
+      console.log('Debounce finished');
+      fetchLogs();
+    }, 500);
+    setDebounceTimeout(newDebounceTimeout);
+  }, [searchTerm, activeFilter]);
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
-  };
-
-  const handleSearch = (event) => {
-    const searchTerm = event.target.value.toLowerCase();
-    setSearchInput(searchTerm);
-    updateFilteredLogs(activeFilter, searchTerm);
-  };
-
-  const handleFilterChange = (newFilter) => {
-    setActiveFilter(newFilter);
-    setCurrentPage(1);
-    updateFilteredLogs(newFilter, searchInput);
-  };
-
-  const updateFilteredLogs = (filter, searchTerm) => {
-    let filtered = logs;
-
-    if (filter !== 'All') {
-      filtered = logs.filter((log) => log.Status === filter);
-    }
-
-    filtered = filtered.filter((log) => log.Healthcare.toLowerCase().includes(searchTerm));
-
-    setFilteredLogs(filtered);
-    setCurrentPage(1);
   };
 
   const goToPage = (pageNumber) => {
@@ -78,8 +57,8 @@ export default function Home() {
 
   const lastIndex = currentPage * itemsPerPage;
   const firstIndex = lastIndex - itemsPerPage;
-  const currentLogs = filteredLogs.slice(firstIndex, lastIndex);
-  const totalPages = Math.ceil(filteredLogs.length / itemsPerPage);
+  const currentLogs = filteredLogs ? filteredLogs.slice(firstIndex, lastIndex) : [];
+  const totalPages = filteredLogs ? Math.ceil(filteredLogs.length / itemsPerPage) : 0;
 
   return (
     <div>
@@ -91,8 +70,8 @@ export default function Home() {
               Activity <span className="text-[#2ED4BF]">Log</span>
             </h1>
             <div className="mb-8 flex flex-row items-start sm:items-center px-6 sm:px-10">
-              <SearchBar handleSearch={handleSearch} />
-              <FilterButton setFilteredLogs={setFilteredLogs} logs={logs} setActiveFilter={handleFilterChange} />
+              <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} setCurrentPage={setCurrentPage} />
+              <FilterButton setActiveFilter={setActiveFilter} setCurrentPage={setCurrentPage} />
             </div>
             <TableLog data={currentLogs} currentPage={currentPage} loading={isLoading} totalPages={totalPages} goToPage={goToPage} />
           </div>

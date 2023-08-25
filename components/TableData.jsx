@@ -76,7 +76,7 @@ const TableData = ({ data, currentPage, totalPages, goToPage, loading }) => {
                   <td className="px-4 py-3">{table.newData}</td>
                   <td className="px-4 py-3">{table.deltaData}</td>
                   <td className=" py-3">
-                    <ProgressBar progress={parseFloat(table.currentCapured) / 2} />
+                    <ProgressBar progress={parseFloat(table.currentCapured)} />
                   </td>
                 </tr>
               ))
