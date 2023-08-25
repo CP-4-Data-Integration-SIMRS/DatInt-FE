@@ -56,12 +56,14 @@ const MonitoringPage = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  // const filteredLogs = filteredMonitor.filter((log) => {
-  //   return log.tableName.toLowerCase().includes(searchTerm.toLowerCase());
-  // });
+  const filteredLogs = filteredMonitor
+    .filter((log) => {
+      return log.tableName.toLowerCase().includes(searchTerm.toLowerCase());
+    })
+    .slice(indexOfFirstItem, indexOfLastItem);
 
-  const currentLogs = filteredMonitor.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredMonitor.length / itemsPerPage);
+  const currentLogs = filteredLogs.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredLogs.length / itemsPerPage);
 
   return (
     <div>
